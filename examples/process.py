@@ -10,13 +10,13 @@ data_path = Path('../data/NILU_Dataset_Trondheim_2014-2019.csv')
 cache_path = Path('./features.csv')
 
 ## Prepare data
-def preprocess(**config):
-  pred_var = config.get('pred_var', 'Torvet PM10')
-  stations = config.get('stations', ['Torvet'])
-  test_size = config.get('test_size', 0.3)
-  val_size = config.get('val_size', 0.1)
-  shuffle = config.get('shuffle', True)
-  window = config.get('window', 6)
+def preprocess(config):
+  pred_var = config['pred_var']
+  stations = config['stations']
+  test_size = config['test_size']
+  val_size = config['val_size']
+  shuffle = config['shuffle']
+  window = config['window']
 
   if (os.path.exists(cache_path)):
     df = pd.read_csv(cache_path)
@@ -25,12 +25,14 @@ def preprocess(**config):
     df = pd.read_csv(data_path, index_col=[0], header=[0, 1])
     df.index.name = 'timestamp'
     df.index = pd.to_datetime(df.index)
-
+    print(df.columns)
     df = df[[*stations, 'weather']]
+    print(df.columns)
     df.columns = [' '.join(col).strip() for col in df.columns.values]
+    print(df.columns)
 
     df = handle_missing(df, strategy='mean')
-    df = add_features(df, labels=['Torvet PM10', 'Torvet PM2.5'])
+    df = add_features(df, labels=['Bakke kirke PM10', 'Bakke kirke PM2.5'])
 
     df.to_csv(cache_path)
 
