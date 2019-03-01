@@ -4,3 +4,4 @@ venv/*
 *.pyc
 *.joblib
 features.csv
+temp-plot.html
