@@ -3,10 +3,12 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 from sklearn.model_selection import train_test_split
+from concat_csvs import *
 
 from .features import add_features
 
-data_path = Path('../data/NILU_Dataset_Trondheim_2014-2019.csv')
+data_path = Path('../data/finale_data/Bakke_kirke.csv')
+traffic_path = Path('../data/TrafikkData/final_traffic_data_cleaned.csv')
 cache_path = Path('./features.csv')
 
 ## Prepare data
@@ -18,21 +20,18 @@ def preprocess(config):
   shuffle = config['shuffle']
   window = config['window']
 
-  if (os.path.exists(cache_path)):
+
+  # os.path.exists(cache_path)
+  if (False):
     df = pd.read_csv(cache_path)
     df = df.set_index(pd.to_datetime(df['timestamp'])).drop(columns=['timestamp']).sort_index()
   else:
-    df = pd.read_csv(data_path, index_col=[0], header=[0, 1])
+    df = pd.read_csv(data_path, delimiter=";", index_col=[0])
     df.index.name = 'timestamp'
     df.index = pd.to_datetime(df.index)
-    print(df.columns)
-    df = df[[*stations, 'weather']]
-    print(df.columns)
-    df.columns = [' '.join(col).strip() for col in df.columns.values]
-    print(df.columns)
-
+    print(df)
     df = handle_missing(df, strategy='mean')
-    df = add_features(df, labels=['Bakke kirke PM10', 'Bakke kirke PM2.5'])
+    df = add_features(df, labels=['PM10', 'PM2.5'])
 
     df.to_csv(cache_path)
 

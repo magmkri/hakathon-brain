@@ -118,7 +118,7 @@ def train(config, data):
     'num_workers': 4,
     'n_feature':len(data['X_train'].columns),
     'n_output': len(data['y_train'].columns),
-    'n_hidden_layers': 1,
+    'n_hidden_layers': 5,
     'batch_size': 64,
     'n_hidden': 512,
     'learning_rate': 1e-4,
