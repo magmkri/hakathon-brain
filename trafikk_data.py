@@ -84,18 +84,18 @@ trafikk_data_path_4 = "./data/TrafikkData/Elgeseter Gate_cleaned.csv"
 
 
 current_data_traffic_path = trafikk_data_path_2
-change_wrongly_formatted_csv(current_data_traffic_path)
+#change_wrongly_formatted_csv(current_data_traffic_path)
 
-trafikk_data = pd.read_csv(current_data_traffic_path)
-trafikk_data = update_data_with_datetime(trafikk_data)
-trafikk_data = update_with_total_volume(trafikk_data)
-trafikk_data = drop_columns_standard(trafikk_data)
-trafikk_data = trafikk_data.rename(columns={'Volum': 'Elgeseter Gate'})
+#trafikk_data = pd.read_csv(current_data_traffic_path)
+#trafikk_data = update_data_with_datetime(trafikk_data)
+#trafikk_data = update_with_total_volume(trafikk_data)
+#trafikk_data = drop_columns_standard(trafikk_data)
+#trafikk_data = trafikk_data.rename(columns={'Volum': 'traffic'})
 
-write_csv_to_file(trafikk_data, "./data/TrafikkData/Bakke Kirke_cleaned.csv")
+#write_csv_to_file(trafikk_data, "./data/TrafikkData/Bakke Kirke_cleaned.csv")
 
-print(trafikk_data.columns.values)
-print(trafikk_data.head())#
+#print(trafikk_data.columns.values)
+#print(trafikk_data.head())
 
 
 
