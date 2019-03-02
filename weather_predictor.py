@@ -23,7 +23,8 @@ while start_date.date() != end_date.date():
     except:
         pass
     start_date = start_date + datetime.timedelta(days=1)
-
+df = df.set_index(pd.to_datetime(df['timestamp'])).drop(columns=['timestamp']).sort_index()
+df = df[~df.index.duplicated(keep='first')]
 write_csv_to_file(df, "./data/WeatherPredictionData/weather_prediction.csv")
 
 

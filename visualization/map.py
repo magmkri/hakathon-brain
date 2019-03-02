@@ -12,13 +12,12 @@ Bakke = getPositionCSV("Bakke kirke")
 Tiller = getPositionCSV("E6-Tiller")
 Elgeseter = getPositionCSV("Elgeseter")
 Torvet = getPositionCSV("Torvet")
-print(Bakke.head())
+
 pos = [Bakke, Tiller, Elgeseter, Torvet]
 names = ["Bakke Kirke", "E6-Tiller", "Elgeseter", "Torvet"]
 
-print(list(Torvet.columns.values))
 
-
+df = getPositionCSV()
 fig = go.Figure()
 lay = go.Layout(title="PM10")
 x_values = Bakke.index
