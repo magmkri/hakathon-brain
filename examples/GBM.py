@@ -37,10 +37,10 @@ def train(config, data):
 def predict(config, data):
   model = load(filename)
   pred_np = model.predict(data['X_test'])
-  print(pred_np)
   pred_df = pd.DataFrame(index=data['X_test'].index)
+  print(len(pred_np[::config['window'], :].flatten()))
+  print(len(pred_df.index))
   pred_df['GBM'] = pred_np[::config['window'], :].flatten()
-  print(pred_df['GBM'])
   pred_df['True'] = data['y_test'].iloc[::config['window'], :].values.flatten()
   rmse = math.sqrt(metrics.mean_squared_error(pred_df['True'], pred_df['GBM']))
   r2 = metrics.r2_score(pred_df['True'], pred_df['GBM'])

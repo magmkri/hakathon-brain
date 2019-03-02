@@ -4,32 +4,50 @@ import pandas as pd
 import datetime
 import numpy as np
 
-
 def concat(path_1, path_2):
   df_1 = read_csv(path_1, delimiter=",", index_col=[0], header=[0, 1])
   df_1.index.name = 'timestamp'
   df_1.index = pd.to_datetime(df_1.index)
-  df_1 = df_1["Bakke kirke"].assign(traffic=0)
-  print(df_1)
+  df_1 = pd.merge(df_1["Bakke kirke"], df_1["weather"], on="timestamp", how='outer')
 
   df_2 = read_csv(path_2, index_col=[2])
   df_2.index.name = 'timestamp'
   df_2.index = pd.to_datetime(df_2.index)
-
-  intersection = df_1.index.intersection(df_2.index)
-  print(intersection)
-
-  counter = 0
-  for index in intersection:
-    df_1["traffic"][str(index)] = df_2["Bakke Kirke"][str(index)]
-    counter += 1
-    print(index)
-    print(counter)
-
+  df_1 = pd.merge(df_1, df_2, on="timestamp", how='outer')
+  df_1 = df_1.drop("Unnamed: 0", axis=1)
+  df_1 = df_1.rename(columns = {"Elgeseter Gate": "traffic"})
   print(df_1)
-  df_1.to_csv("all_data", sep=';')
+  df_1.to_csv("Bakke_kirke", sep=';')
 
-  return df_1
+
+
+
+
+#def concat(path_1, path_2):
+#  df_1 = read_csv(path_1, delimiter=",", index_col=[0], header=[0, 1])
+#  df_1.index.name = 'timestamp'
+#  df_1.index = pd.to_datetime(df_1.index)
+#  df_1 = df_1["Bakke kirke"].assign(traffic=0)
+#  print(df_1)
+#
+#  df_2 = read_csv(path_2, index_col=[2])
+#  df_2.index.name = 'timestamp'
+#  df_2.index = pd.to_datetime(df_2.index)
+#
+#  intersection = df_1.index.intersection(df_2.index)
+#  print(intersection)
+#
+#  counter = 0
+#  for index in intersection:
+#    df_1["traffic"][str(index)] = df_2["Bakke Kirke"][str(index)]
+#    counter += 1
+#    print(index)
+#    print(counter)
+#
+#  print(df_1)
+#  df_1.to_csv("all_data", sep=';')
+#
+#  return df_1
 
 def fix_comma(df):
   res = df

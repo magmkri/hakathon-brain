@@ -1,14 +1,14 @@
 import os
 import numpy as np
 import pandas as pd
+import plotly
 from pathlib import Path
 from sklearn.model_selection import train_test_split
 from concat_csvs import *
 
 from .features import add_features
 
-data_path = Path('../data/finale_data/Bakke_kirke.csv')
-traffic_path = Path('../data/TrafikkData/final_traffic_data_cleaned.csv')
+data_path = Path('../examples/Bakke_kirke')
 cache_path = Path('./features.csv')
 
 ## Prepare data
@@ -29,13 +29,24 @@ def preprocess(config):
     df = pd.read_csv(data_path, delimiter=";", index_col=[0])
     df.index.name = 'timestamp'
     df.index = pd.to_datetime(df.index)
-    print(df)
     df = handle_missing(df, strategy='mean')
-    df = add_features(df, labels=['PM10', 'PM2.5'])
-
+    #df = add_features(df, labels=['PM10', 'PM2.5', 'traffic'])
     df.to_csv(cache_path)
 
+    df = pd.merge(df[pred_var], df[pred_var], on="timestamp")
+    df = df.drop(columns=["PM10_y"])
+    df.columns = ['PM10']
+    #temp0 = pd.merge(df['humidity'], temp, on='timestamp')
+    #temp2 = pd.merge(df["pressure"], temp0, on="timestamp")
+    #temp3 = pd.merge(df["rain"], temp2, on="timestamp")
+    #temp4 = pd.merge(df["temperature"], temp3, on="timestamp")
+    #temp5 = pd.merge(df["wind_from_direction"], temp4, on="timestamp")
+    #df = pd.merge(df["wind_speed"], temp5, on="timestamp")
+  print(df)
+
   y = get_targets(df, pred_var, window)
+  #df = df.drop(columns=["PM10"])
+  print(df)
   X = df
   data_dict = split_data(X, y, val_size=val_size, test_size=test_size, shuffle=shuffle)
   return data_dict

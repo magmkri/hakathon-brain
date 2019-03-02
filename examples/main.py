@@ -5,6 +5,10 @@ import examples.RF as rf
 import plotly.plotly as py
 import plotly.graph_objs as go
 from plotly.offline import iplot, init_notebook_mode, plot
+from concat_csvs import *
+
+data_path = Path('../data/NILU_Dataset_Trondheim_2014-2019.csv')
+traffic_path = Path('../data/TrafikkData/Bakke Kirke_cleaned.csv')
 
 config = {
   'pred_var': 'PM10', # Must include station and pollutants name (column name)
@@ -15,13 +19,12 @@ config = {
   'shuffle': True
 }
 
+#concat(data_path, traffic_path)
 
 processed_data = preprocess(config)
-print("X Train:" + str(processed_data["X_train"].columns))
-print("Y Train:" + str(processed_data["y_train"].columns))
 
 gbm.train(config, processed_data)
-
+print(gbm.get_feature_importance(config, processed_data))
 gbm_results, rmse, r2 = gbm.predict(config, processed_data)
 
 print("RMSE: " + str(rmse))
