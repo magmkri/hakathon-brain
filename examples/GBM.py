@@ -21,11 +21,10 @@ params = {
   'n_jobs': 4,
 }
 
-filename = Path('./GBM_model.joblib')
 
 ## Train Model
 # Trains multiple regressors for direct multistep forecast strategy
-def train(config, data):
+def train(config, data, filename):
   if (os.path.exists(filename)):
     return
   else:
@@ -34,7 +33,7 @@ def train(config, data):
     dump(model, filename)
 
 ## Predict
-def predict(config, data):
+def predict(config, data, filename):
   metro_prediction = data["X_test"]["pm10_concentration"]
   model = load(filename)
   pred_np = model.predict(data['X_test'])[:,0]
@@ -51,7 +50,7 @@ def predict(config, data):
   return pred_df, rmse, r2
 
 ## Getter Feature Importance
-def get_feature_importance(config, data):
+def get_feature_importance(config, data, filename):
   # Returns array of importances due to multi output regressor
   model = load(filename)
   feature_importance = [pd.Series(e.feature_importances_, index=data['X_train'].columns).sort_values() for e in model.estimators_]
