@@ -4,22 +4,34 @@ import pandas as pd
 import datetime
 import numpy as np
 
-def concat(path_1, path_2):
-  df_1 = read_csv(path_1, delimiter=",", index_col=[0], header=[0, 1])
-  df_1.index.name = 'timestamp'
-  df_1.index = pd.to_datetime(df_1.index)
-  df_1 = pd.merge(df_1["Bakke kirke"], df_1["weather"], on="timestamp", how='outer')
+data_path = 'data/NILU_Dataset_Trondheim_2014-2019.csv'
+metro_path = 'data/weather/weather_elgeseter'
+traffic_path = "data/TrafikkData/Elgeseter Gate_cleaned.csv"
 
-  df_2 = read_csv(path_2, index_col=[2])
+def concat(path_1, path_2, path_3):
+  df = pd.read_csv(path_1, index_col=[0], header=[0, 1])
+  df.index.name = 'timestamp'
+  df.index = pd.to_datetime(df.index)
+  df_1 = pd.merge(df["Elgeseter"], df["weather"], on="timestamp")
+
+  df_2 = read_csv(path_2, index_col=[1])
   df_2.index.name = 'timestamp'
   df_2.index = pd.to_datetime(df_2.index)
-  df_1 = pd.merge(df_1, df_2, on="timestamp", how='outer')
+  df_1 = pd.merge(df_1, df_2, on="timestamp", how="inner")
   df_1 = df_1.drop("Unnamed: 0", axis=1)
-  df_1 = df_1.rename(columns = {"Elgeseter Gate": "traffic"})
+
+  df_3 = read_csv(path_3, index_col=[2])
+  df_3.index.name = 'timestamp'
+  df_3.index = pd.to_datetime(df_3.index)
+  print(df_3)
+  df_1 = pd.merge(df_1, df_3, on="timestamp", how="inner")
+  df_1 = df_1.drop("Unnamed: 0", axis=1)
+
   print(df_1)
-  df_1.to_csv("Bakke_kirke", sep=';')
 
+  df_1.to_csv("Elgeseter_super", sep=';')
 
+#concat(data_path, metro_path, traffic_path)
 
 
 

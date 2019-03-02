@@ -35,15 +35,19 @@ def train(config, data):
 
 ## Predict
 def predict(config, data):
+  metro_prediction = data["X_test"]["pm10_concentration"]
   model = load(filename)
-  pred_np = model.predict(data['X_test'])
+  pred_np = model.predict(data['X_test'])[:,0]
   pred_df = pd.DataFrame(index=data['X_test'].index)
-  print(len(pred_np[::config['window'], :].flatten()))
-  print(len(pred_df.index))
-  pred_df['GBM'] = pred_np[::config['window'], :].flatten()
+  pred_df['GBM'] = pred_np
   pred_df['True'] = data['y_test'].iloc[::config['window'], :].values.flatten()
   rmse = math.sqrt(metrics.mean_squared_error(pred_df['True'], pred_df['GBM']))
   r2 = metrics.r2_score(pred_df['True'], pred_df['GBM'])
+  r2_metro = metrics.r2_score(pred_df["True"], metro_prediction)
+  rmse_metro = math.sqrt(metrics.mean_squared_error(pred_df['True'],metro_prediction))
+  print("Our r2: " + str(r2))
+  print("Metro r2: " + str(r2_metro))
+  print("Metro rse: " + str(rmse_metro))
   return pred_df, rmse, r2
 
 ## Getter Feature Importance

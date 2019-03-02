@@ -9,6 +9,7 @@ def add_datetime_features(data):
   data['day_of_week'] = data.index.dayofweek
   data['day_of_month'] = data.index.day
   data['day_of_year'] = data.index.dayofyear
+  return data
 
 ## Lagged Features
 def add_hour_lag_features(data, labels=[], lags=[]):
